@@ -16,5 +16,7 @@ typedef struct s_server_vars
 }				t_server_vars;
 
 void	receive_bits(t_server_vars *vars, int signal);
+void	put_char(int sig, siginfo_t *info, void *ucontext);
+void	exit_success(int sig, siginfo_t *info, void *ucontext);
 
 #endif
