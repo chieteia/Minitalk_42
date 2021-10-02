@@ -7,7 +7,7 @@ int	g_signal = 0;
 void	put_char(int sig, siginfo_t *info, void *ucontext)
 {
 	static int	bit;
-	static int	index;
+	//static int	index;
 	static char	c;
 	//static char	buf[BUFSIZ];
 
