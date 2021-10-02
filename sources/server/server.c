@@ -1,15 +1,11 @@
 #include "../../includes/server.h"
 
-//#define EOT 4
-
 int	g_signal = 0;
 
 void	put_char(int sig, siginfo_t *info, void *ucontext)
 {
 	static int	bit;
-	//static int	index;
 	static char	c;
-	//static char	buf[BUFSIZ];
 
 	(void)ucontext;
 	(void)info;
@@ -18,16 +14,10 @@ void	put_char(int sig, siginfo_t *info, void *ucontext)
 	if (bit == 8)
 	{
 		write(1, &c, 1);
-		//buf[index++] = c;
-		//if (c == '\0' || index == BUFSIZ)
-		//{
-		//	write(1, buf, index);
-		//	index = 0;
-		//}
 		c = 0;
 		bit = 0;
-	kill(info->si_pid, sig);
 	}
+	kill(info->si_pid, sig);
 }
 
 void	exit_success(int sig, siginfo_t *info, void *ucontext)
@@ -44,9 +34,6 @@ static void	check_argument(int argc)
 		terminate(USAGE_SERVER, 1);
 }
 
-/*
-Main program
-*/
 int	main(int argc, char **argv)
 {
 	struct sigaction	sa;

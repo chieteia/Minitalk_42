@@ -15,12 +15,12 @@ void	signal_checker(int sig, siginfo_t *info, void *ucontext)
 		g_signal = SIGUSR1;
 }
 
-//void	wait_server_response(int send_signal)
-//{
-//	sleep(100);
-//	if (g_signal == send_signal)
-//		terminate(TIMEOUT, 1);
-//}
+void	wait_server_response(int send_signal)
+{
+	sleep(100);
+	if (g_signal == send_signal)
+		terminate(TIMEOUT, 1);
+}
 
 static void send_bit(int server_pid, int send_signal)
 {
@@ -42,8 +42,7 @@ void	send_char(pid_t server_pid, char c)
 			send_signal = SIGUSR2;
 		g_signal = send_signal;
 		send_bit(server_pid, send_signal);
-		usleep(50);
-		//wait_server_response(send_signal);
+		wait_server_response(send_signal);
 	}
 }
 
