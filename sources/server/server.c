@@ -1,6 +1,7 @@
 #include "../../includes/server.h"
 
 //#define EOT 4
+# define BUF 10000
 
 int	g_signal = 0;
 
@@ -9,7 +10,7 @@ void	put_char(int sig, siginfo_t *info, void *ucontext)
 	static int	bit;
 	static int	index;
 	static char	c;
-	static char	buf[BUFSIZ];
+	static char	buf[BUF];
 
 	(void)ucontext;
 	(void)info;
@@ -18,7 +19,7 @@ void	put_char(int sig, siginfo_t *info, void *ucontext)
 	if (bit == 8)
 	{
 		buf[index++] = c;
-		if (c == '\0' || index >= BUFSIZ)
+		if (c == '\0' || index == BUF)
 		{
 			write(1, buf, index);
 			index = 0;
