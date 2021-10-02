@@ -7,19 +7,20 @@ void	signal_checker(int sig, siginfo_t *info, void *ucontext)
 	(void)info;
 	(void)ucontext;
 	(void)sig;
-	write(1, "ok\n", 3);
-	//if (g_signal == SIGUSR1)
-	//	g_signal = SIGUSR2;
-	//else
-	//	g_signal = SIGUSR1;
+	if (g_signal != sig)
+		terminate(UNMATCHED_SIGNL, 1);
+	if (g_signal == SIGUSR1)
+		g_signal = SIGUSR2;
+	else
+		g_signal = SIGUSR1;
 }
 
-//void	wait_server_response(void)
-//{
-//	sleep(100);
-//	//if (g_signal == send_signal)
-//	//	terminate(TIMEOUT, 1);
-//}
+void	wait_server_response(int send_signal)
+{
+	sleep(100);
+	if (g_signal == send_signal)
+		terminate(TIMEOUT, 1);
+}
 
 static void send_bit(int server_pid, int send_signal)
 {
@@ -41,8 +42,7 @@ void	send_char(pid_t server_pid, char c)
 			send_signal = SIGUSR2;
 		g_signal = send_signal;
 		send_bit(server_pid, send_signal);
-		usleep(150);
-		//wait_server_response();
+		wait_server_response(send_signal);
 	}
 }
 

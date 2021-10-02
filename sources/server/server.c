@@ -9,7 +9,7 @@ void	put_char(int sig, siginfo_t *info, void *ucontext)
 	static int	bit;
 	static int	index;
 	static char	c;
-	//static char	buf[BUFSIZ];
+	static char	buf[BUFSIZ];
 
 	(void)ucontext;
 	(void)info;
@@ -17,16 +17,15 @@ void	put_char(int sig, siginfo_t *info, void *ucontext)
 	bit++;
 	if (bit == 8)
 	{
-		write(1, &c, 1);
-		//buf[index++] = c;
-		//if (c == '\0' || index == BUFSIZ)
-		//{
-		//	write(1, buf, index);
-		//	index = 0;
-		//}
+		buf[index++] = c;
+		if (c == '\0' || index == BUFSIZ)
+		{
+			write(1, buf, index);
+			index = 0;
+		}
 		c = 0;
 		bit = 0;
-	//kill(info->si_pid, sig);
+	kill(info->si_pid, sig);
 	}
 }
 
