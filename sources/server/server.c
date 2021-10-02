@@ -9,7 +9,7 @@ void	put_char(int sig, siginfo_t *info, void *ucontext)
 	static int	bit;
 	static int	index;
 	static char	c;
-	static char	buf[5];
+	static char	buf[BUFSIZ];
 
 	(void)ucontext;
 	(void)info;
@@ -18,7 +18,7 @@ void	put_char(int sig, siginfo_t *info, void *ucontext)
 	if (bit == 8)
 	{
 		buf[index++] = c;
-		if (c == '\0' || index >= 5)
+		if (c == '\0' || index >= BUFSIZ)
 		{
 			write(1, buf, index);
 			index = 0;
@@ -110,3 +110,4 @@ int	main(int argc, char **argv)
 //	}
 //	return (0);
 //}
+
