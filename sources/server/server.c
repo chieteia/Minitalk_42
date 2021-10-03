@@ -1,7 +1,5 @@
 #include "../../includes/server.h"
 
-int	g_signal = 0;
-
 void	put_char(int sig, siginfo_t *info, void *ucontext)
 {
 	static int	bit;
@@ -17,7 +15,12 @@ void	put_char(int sig, siginfo_t *info, void *ucontext)
 		c = 0;
 		bit = 0;
 	}
+	usleep(100);
 	kill(info->si_pid, sig);
+	//g_signal = info->si_pid;
+	//g_signal = g_signal << 1;
+	//g_signal = g_signal + (sig == SIGUSR1);
+	//printf("before : %d\n", g_signal);
 }
 
 void	exit_success(int sig, siginfo_t *info, void *ucontext)
@@ -46,6 +49,14 @@ int	main(int argc, char **argv)
 	set_signal_handler(&sa, put_char);
 	set_terminate_handler(&term, exit_success);
 	while (1)
+	{
 		pause();
+		//usleep(100);
+		//printf("after : %d\n", (g_signal >> 1));
+		//kill((g_signal >> 1), SIGUSR1);
+	}
 	return (0);
 }
+
+//client ---> sig1 ---> server
+//client <--- sig1 <--- server

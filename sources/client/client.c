@@ -1,6 +1,6 @@
 #include "../../includes/client.h"
 
-int	g_signal;
+int	g_signal = 0;
 
 void	signal_checker(int sig, siginfo_t *info, void *ucontext)
 {
@@ -9,17 +9,19 @@ void	signal_checker(int sig, siginfo_t *info, void *ucontext)
 	(void)sig;
 	if (g_signal != sig)
 		terminate(UNMATCHED_SIGNL, 1);
-	if (g_signal == SIGUSR1)
-		g_signal = SIGUSR2;
-	else
-		g_signal = SIGUSR1;
+	//if (g_signal == SIGUSR1)
+	//	g_signal = SIGUSR2;
+	//else
+	//	g_signal = SIGUSR1;
 }
 
 void	wait_server_response(int send_signal)
 {
-	sleep(100);
-	if (g_signal == send_signal)
-		terminate(TIMEOUT, 1);
+	(void)send_signal;
+	//write(1, "1", 1);
+	pause();
+	usleep(100);
+	//write(1, "3", 1);
 }
 
 static void send_bit(int server_pid, int send_signal)
@@ -30,16 +32,18 @@ static void send_bit(int server_pid, int send_signal)
 
 void	send_char(pid_t server_pid, char c)
 {
-	int	n;
-	int	send_signal;
+	int			bit;
+	int			send_signal;
+	const int	signals[2] = {SIGUSR2, SIGUSR1};
 
-	n = CHAR_BIT_SIZE;
-	while (n--)
+	bit = CHAR_BIT_SIZE;
+	while (bit--)
 	{
-		if ((c >> n) & 1)
-			send_signal = SIGUSR1;
-		else
-			send_signal = SIGUSR2;
+		//if ((c >> n) & 1)
+		//	send_signal = SIGUSR1;
+		//else
+		//	send_signal = SIGUSR2;
+		send_signal = signals[((c >> bit) & 1)];
 		g_signal = send_signal;
 		send_bit(server_pid, send_signal);
 		wait_server_response(send_signal);
@@ -48,11 +52,9 @@ void	send_char(pid_t server_pid, char c)
 
 void	send_message(pid_t server_pid, char *msg)
 {
-	while (1)
+	while (*msg)
 	{
 		send_char(server_pid, *msg);
-		if (*msg == '\0')
-			break ;
 		msg++;
 	}
 }
@@ -88,6 +90,7 @@ int	main(int ac, char **av)
 	}
 	(void)ac;
 	server_pid = ft_atoi(av[1]);
+	ft_putnbr_fd(getpid(), 1);
 	set_signal_handler(&sc, signal_checker);
 	//send_client_pid(server_pid, client_pid);
 	send_message(ft_atoi(av[1]), av[2]);

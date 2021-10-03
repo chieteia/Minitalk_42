@@ -17,8 +17,7 @@ INCLUDES	=	$(addprefix -I, $(HEADERS))
 
 CLIENT_FILES	=	client.c
 
-SERVER_FILES	=	receive_bits.c \
-					server.c
+SERVER_FILES	=	server.c
 
 UTILS_FILES		=	utils.c
 
