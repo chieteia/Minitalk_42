@@ -1,5 +1,7 @@
 {
 	"files.associations": {
-		"cstdio": "cpp"
+		"cstdio": "cpp",
+		"libft.h": "c",
+		"minitalk.h": "c"
 	}
 }

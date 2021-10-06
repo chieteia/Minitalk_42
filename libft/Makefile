@@ -1,6 +1,6 @@
 NAME		=	libft.a
 CC			=	gcc
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-g -Wall -Wextra -Werror
 RM			=	rm -f
 RM_DIR		=	rm -rf
 SRCS_FILES	=	ft_atoi.c \
@@ -51,7 +51,8 @@ SRCS_FILES	=	ft_atoi.c \
 				ft_strtrim.c \
 				ft_substr.c \
 				ft_tolower.c \
-				ft_toupper.c
+				ft_toupper.c \
+				get_next_line.c
 SRCS_DIR	=	./sources
 SRCS		=	$(addprefix $(SRCS_DIR)/,$(SRCS_FILES))
 OBJS		=	$(addprefix $(OBJ_DIR)/,$(SRCS_FILES:.c=.o))

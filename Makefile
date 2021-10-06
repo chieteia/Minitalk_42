@@ -1,6 +1,7 @@
 CC			=	GCC
 CFLAGS		=	-Wall -Wextra -Werror
 
+NAME		=	minitalk
 CLIENT		=	client
 SERVER		=	server
 
@@ -40,35 +41,40 @@ YELLOW		=	"\033[33m"
 RESET		=	"\033[0m"
 
 .c.o:
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@echo $(GREEN)"Creating: $@"$(RESET)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-.PHONY: all clean fclean re db
+all: $(NAME)
 
-all: $(SERVER) $(CLIENT)
+$(NAME): $(SERVER) $(CLIENT)
 
 $(SERVER): $(LIBFT) $(SERVER_OBJ) $(UTILS_OBJ)
-	$(CC) $(CFLAGS) $(SERVER_OBJ) $(UTILS_OBJ) $(LIBFT) -o $(SERVER)
+	@$(CC) $(CFLAGS) $(SERVER_OBJ) $(UTILS_OBJ) $(LIBFT) -o $(SERVER)
 	@echo $(YELLOW)"@@@@@ server(exe_file) created @@@@@"$(RESET)
 
 $(CLIENT): $(LIBFT) $(CLIENT_OBJ) $(UTILS_OBJ)
-	$(CC) $(CFLAGS) $(CLIENT_OBJ) $(UTILS_OBJ) $(LIBFT) -o $(CLIENT)
+	@$(CC) $(CFLAGS) $(CLIENT_OBJ) $(UTILS_OBJ) $(LIBFT) -o $(CLIENT)
 	@echo $(YELLOW)"@@@@@ client(exe_file) created @@@@@"$(RESET)
 
 $(LIBFT):
 	@make -C $(LIB_DIR)
 
 clean:
-	$(RM) $(SERVER_OBJ)
-	$(RM) $(CLIENT_OBJ)
-	$(RM) $(UTILS_OBJ)
-	make -C $(LIB_DIR) clean
+	@$(RM) $(SERVER_OBJ)
+	@$(RM) $(CLIENT_OBJ)
+	@$(RM) $(UTILS_OBJ)
+	@make -C $(LIB_DIR) clean
 	@echo $(RED)"REMOVE OBJECT FILES"$(RESET)
 
 fclean: clean
-	$(RM) $(SERVER)
-	$(RM) $(CLIENT)
-	$(RM) $(LIBFT)
+	@$(RM) $(SERVER)
+	@$(RM) $(CLIENT)
+	@$(RM) $(LIBFT)
 	@echo $(RED)"REMOVE libft.a"$(RESET)
 	@echo $(RED)"REMOVE EXECUTABLE FILES"$(RESET)
 
+bonus: $(NAME)
+
 re: fclean all
+
+.PHONY: all clean fclean re db

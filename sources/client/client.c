@@ -1,36 +1,28 @@
-#include "../../includes/client.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/05 02:55:45 by ntoshihi          #+#    #+#             */
+/*   Updated: 2021/10/06 22:03:56 by ntoshihi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int	g_signal = 0;
+#include "../../includes/minitalk.h"
 
-void	signal_checker(int sig, siginfo_t *info, void *ucontext)
+static int	g_signal = WAITING_ACK;
+
+static void	signal_handler(int sig, siginfo_t *info, void *ucontext)
 {
 	(void)info;
 	(void)ucontext;
-	(void)sig;
-	if (g_signal != sig)
-		terminate(UNMATCHED_SIGNL, 1);
-	//if (g_signal == SIGUSR1)
-	//	g_signal = SIGUSR2;
-	//else
-	//	g_signal = SIGUSR1;
+	if (sig == SIGUSR1)
+		g_signal = RECIEVED_ACK;
 }
 
-void	wait_server_response(int send_signal)
-{
-	(void)send_signal;
-	//write(1, "1", 1);
-	pause();
-	usleep(100);
-	//write(1, "3", 1);
-}
-
-static void send_bit(int server_pid, int send_signal)
-{
-	if (kill(server_pid, send_signal) == -1)
-		terminate(ERROR_SEND_SIGNAL, 1);
-}
-
-void	send_char(pid_t server_pid, char c)
+static void	send_packet(pid_t server_pid, char c)
 {
 	int			bit;
 	int			send_signal;
@@ -39,60 +31,30 @@ void	send_char(pid_t server_pid, char c)
 	bit = CHAR_BIT_SIZE;
 	while (bit--)
 	{
-		//if ((c >> n) & 1)
-		//	send_signal = SIGUSR1;
-		//else
-		//	send_signal = SIGUSR2;
 		send_signal = signals[((c >> bit) & 1)];
-		g_signal = send_signal;
-		send_bit(server_pid, send_signal);
-		wait_server_response(send_signal);
+		if (kill(server_pid, send_signal) == -1)
+			terminate(ERROR_SEND_SIGNAL, RED, 1);
+		while (g_signal == WAITING_ACK)
+			;
+		g_signal = WAITING_ACK;
 	}
 }
 
-void	send_message(pid_t server_pid, char *msg)
+static void	send_message(pid_t server_pid, char *msg)
 {
+	if (kill(server_pid, 0) == -1)
+		terminate(INVALID_PID, RED, 1);
 	while (*msg)
-	{
-		send_char(server_pid, *msg);
-		msg++;
-	}
+		send_packet(server_pid, *msg++);
+	send_packet(server_pid, (char)0x4);
+	terminate(SUCCESS_MSG_CLIENT, GREEN, 0);
 }
 
-//void	send_client_pid(pid_t servser_pid, pid_t client_pid)
-//{
-//	int	n;
-//	int	send_signal;
-
-//	n = INT_BIT_SIZE;
-//	while (--n >= 0)
-//	{
-//		if ((client_pid >> n) & 1)
-//			send_signal = SIGUSR1;
-//		else
-//			send_signal = SIGUSR2;
-//		if (kill(servser_pid, send_signal) == -1)
-//			terminate(ERROR_SEND_SIGNAL, 1);
-//		usleep(50);
-//	}
-//	//wait_server_response();
-//}
-
-int	main(int ac, char **av)
+int	main(int argc, char **argv)
 {
-	pid_t				server_pid;
 	struct sigaction	sc;
 
-	if (ac != 3)
-	{
-		ft_putstr_fd(USAGE_CLIENT, 1);
-		exit(1);
-	}
-	(void)ac;
-	server_pid = ft_atoi(av[1]);
-	ft_putnbr_fd(getpid(), 1);
-	set_signal_handler(&sc, signal_checker);
-	//send_client_pid(server_pid, client_pid);
-	send_message(ft_atoi(av[1]), av[2]);
-	terminate(SUCCESE_EXIT, 0);
+	check_arguments(argc, argv, CLIENT);
+	set_signal_handler(&sc, signal_handler);
+	send_message(ft_atoi(argv[1]), argv[2]);
 }
