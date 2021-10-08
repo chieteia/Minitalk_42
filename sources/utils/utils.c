@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 02:55:47 by ntoshihi          #+#    #+#             */
-/*   Updated: 2021/10/06 17:42:41 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2021/10/08 10:29:24 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,12 @@ void	check_arguments(int argc, char **argv, int mode)
 		if (argc != 3)
 			terminate(USAGE_CLIENT, RED, 1);
 		server_pid = argv[1];
+		if (!*server_pid)
+			terminate(INVALID_PID, RED, 1);
 		while (*server_pid)
 		{
 			if (!ft_isdigit(*server_pid++))
-				terminate(USAGE_CLIENT, RED, 1);
+				terminate(INVALID_PID, RED, 1);
 		}
 	}
 }

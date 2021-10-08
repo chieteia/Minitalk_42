@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 22:09:50 by ntoshihi          #+#    #+#             */
-/*   Updated: 2021/10/06 22:09:51 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2021/10/08 10:25:42 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,22 @@
 
 //server
 # define SERVER 0
-# define USAGE_SERVER "Usage : ./server\n"
+# define USAGE_SERVER "USAGE : ./server\n"
 # define DISCONNECT "\nDisconnected!!!\n"
-# define ERROR_SEND_ACK "Error : Fail to send signal to client\n"
+# define ERROR_SEND_ACK "ERROR : Fail to send signal to client\n"
 # define SUCCESS_MSG_SERVER "\nSuccessfully recieved string from client\n"
 
 //client
 # define CLIENT 1
-# define INVALID_PID "Error : Invalid server_PID\n"
-# define USAGE_CLIENT "Usage : ./client [server_PID] [STRING should be sent]\n"
-# define ERROR_SEND_SIGNAL "Error : Fail to send signal to server\n"
-# define TIMEOUT "Error : No response from server\n"
+# define INVALID_PID "ERROR : Invalid server_PID\n"
+# define USAGE_CLIENT "USAGE : ./client [server_PID] [STRING should be sent]\n"
+# define ERROR_SEND_SIGNAL "ERROR : Fail to send signal to server\n"
+# define TIMEOUT "TIMEOUT : No response from server\n"
 # define SUCCESS_MSG_CLIENT "Successfully sent string to server\n"
-# define UNMATCHED_SIGNL "Error : Received signal differ from sent one\n"
+# define UNMATCHED_SIGNL "ERROR : Received signal differ from sent one\n"
 
 //sigaction
-# define ERROR_SIGACTION "Error : Look at Sigaction()\n"
+# define ERROR_SIGACTION "ERROR : Look at Sigaction()\n"
 
 //SIGNAL
 # define WAITING_SIGNAL 0

@@ -6,7 +6,7 @@
 /*   By: ntoshihi <ntoshihi@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 02:55:45 by ntoshihi          #+#    #+#             */
-/*   Updated: 2021/10/06 22:03:56 by ntoshihi         ###   ########.fr       */
+/*   Updated: 2021/10/08 10:19:49 by ntoshihi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static void	send_packet(pid_t server_pid, char c)
 	int			bit;
 	int			send_signal;
 	const int	signals[2] = {SIGUSR2, SIGUSR1};
+	int			time;
 
 	bit = CHAR_BIT_SIZE;
 	while (bit--)
@@ -34,8 +35,13 @@ static void	send_packet(pid_t server_pid, char c)
 		send_signal = signals[((c >> bit) & 1)];
 		if (kill(server_pid, send_signal) == -1)
 			terminate(ERROR_SEND_SIGNAL, RED, 1);
+		time = 0;
 		while (g_signal == WAITING_ACK)
-			;
+		{
+			if (time > 1000000000)
+				terminate(TIMEOUT, RED, 1);
+			time++;
+		}
 		g_signal = WAITING_ACK;
 	}
 }
